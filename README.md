@@ -11,3 +11,13 @@ dotnet new webapi -o api
 ```bash
 dotnet watch run
 ```
+
+## 3. Migration
+
+```
+dotnet ef migrations add init
+```
+
+```
+dotnet ef database update
+```

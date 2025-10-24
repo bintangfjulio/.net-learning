@@ -16,7 +16,8 @@
           "Microsoft.EntityFrameworkCore.SqlServer": "9.0.10",
           "Microsoft.EntityFrameworkCore.Tools": "9.0.10",
           "Microsoft.Extensions.Identity.Core": "9.0.10",
-          "Newtonsoft.Json": "13.0.4"
+          "Newtonsoft.Json": "13.0.4",
+          "Swashbuckle.AspNetCore.SwaggerUI": "9.0.6"
         },
         "runtime": {
           "api.dll": {}
@@ -867,6 +868,14 @@
           }
         }
       },
+      "Swashbuckle.AspNetCore.SwaggerUI/9.0.6": {
+        "runtime": {
+          "lib/net9.0/Swashbuckle.AspNetCore.SwaggerUI.dll": {
+            "assemblyVersion": "9.0.6.0",
+            "fileVersion": "9.0.6.1840"
+          }
+        }
+      },
       "System.ClientModel/1.0.0": {
         "dependencies": {
           "System.Memory.Data": "1.0.2",
@@ -1502,6 +1511,13 @@
       "sha512": "sha512-QYFyxhaABwmq3p/21VrZNYvCg3DaEoN/wUuw5nmfAf0X3HLjgupwhkEWdgfb9nvGAUIv3osmZoD3kKl4jxEmYQ==",
       "path": "newtonsoft.json.bson/1.0.2",
       "hashPath": "newtonsoft.json.bson.1.0.2.nupkg.sha512"
+    },
+    "Swashbuckle.AspNetCore.SwaggerUI/9.0.6": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-WGsw/Yop9b16miq8TQd4THxuEgkP5cH3+DX93BrX9m0OdPcKNtg2nNm77WQSAsA+Se+M0bTiu8bUyrruRSeS5g==",
+      "path": "swashbuckle.aspnetcore.swaggerui/9.0.6",
+      "hashPath": "swashbuckle.aspnetcore.swaggerui.9.0.6.nupkg.sha512"
     },
     "System.ClientModel/1.0.0": {
       "type": "package",

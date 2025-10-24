@@ -10,11 +10,6 @@ using Microsoft.IdentityModel.Tokens;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
-// Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
-
-// builder.Services.AddControllers();
-builder.Services.AddOpenApi();
 builder.Services.AddControllers().AddNewtonsoftJson(options =>
 {
     options.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore;
@@ -37,11 +32,11 @@ builder.Services.AddIdentity<AppUser, IdentityRole>(options =>
 
 builder.Services.AddAuthentication(options =>
 {
-    options.DefaultAuthenticateScheme = 
-    options.DefaultChallengeScheme = 
-    options.DefaultForbidScheme = 
-    options.DefaultScheme = 
-    options.DefaultSignInScheme = 
+    options.DefaultAuthenticateScheme =
+    options.DefaultChallengeScheme =
+    options.DefaultForbidScheme =
+    options.DefaultScheme =
+    options.DefaultSignInScheme =
     options.DefaultSignOutScheme = JwtBearerDefaults.AuthenticationScheme;
 }).AddJwtBearer(
     options =>
@@ -54,28 +49,67 @@ builder.Services.AddAuthentication(options =>
             ValidAudience = builder.Configuration["JWT:Audience"],
             ValidateIssuerSigningKey = true,
             IssuerSigningKey = new SymmetricSecurityKey(
-                System.Text.Encoding.UTF8.GetBytes(builder.Configuration["JWT:Key"] ?? "")),
+                System.Text.Encoding.UTF8.GetBytes(builder.Configuration["JWT:SigningKey"] ?? "")),
         };
     }
 );
 
+builder.Services.AddAuthorization();
 builder.Services.AddScoped<IStockRepository, StockRepository>();
 builder.Services.AddScoped<ICommentRepository, CommentRepository>();
 builder.Services.AddScoped<ITokenService, TokenService>();
 
-var app = builder.Build();
+builder.Services.AddOpenApi("v1", options =>
+{
+    options.AddDocumentTransformer((document, context, cancellationToken) =>
+    {
+        document.Info = new Microsoft.OpenApi.Models.OpenApiInfo
+        {
+            Title = "My API",
+            Version = "v1",
+            Description = "API documentation with JWT authentication support"
+        };
 
-// Configure the HTTP request pipeline.
+        document.Components ??= new Microsoft.OpenApi.Models.OpenApiComponents();
+        document.Components.SecuritySchemes["Bearer"] = new Microsoft.OpenApi.Models.OpenApiSecurityScheme
+        {
+            Type = Microsoft.OpenApi.Models.SecuritySchemeType.Http,
+            Scheme = "bearer",
+            BearerFormat = "JWT",
+            Description = "Enter your JWT token below:"
+        };
+
+        document.SecurityRequirements.Add(new Microsoft.OpenApi.Models.OpenApiSecurityRequirement
+        {
+            [new Microsoft.OpenApi.Models.OpenApiSecurityScheme
+            {
+                Reference = new Microsoft.OpenApi.Models.OpenApiReference
+                {
+                    Type = Microsoft.OpenApi.Models.ReferenceType.SecurityScheme,
+                    Id = "Bearer"
+                }
+            }] = new string[] {}
+        });
+
+        return Task.CompletedTask;
+    });
+});
+
+
+var app = builder.Build();
 if (app.Environment.IsDevelopment())
 {
     app.MapOpenApi();
+    app.UseSwaggerUI(options =>
+    {
+        options.SwaggerEndpoint("/openapi/v1.json", "My API v1");
+        options.RoutePrefix = "swagger"; 
+    });
 }
 
 app.UseHttpsRedirection();
-
 app.UseAuthentication();
 app.UseAuthorization();
-
 app.MapControllers();
 
 app.Run();

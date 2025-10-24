@@ -11,7 +11,7 @@ namespace api.Dtos.Account
         [Required]
         [MinLength(3, ErrorMessage = "Username must be at least 3 characters long")]
         [MaxLength(10, ErrorMessage = "Username must be at most 10 characters long")]
-        public string? Username { get; set; }
+        public string? UserName { get; set; }
 
         [Required]
         [EmailAddress]

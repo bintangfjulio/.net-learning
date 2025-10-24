@@ -52,19 +52,22 @@ namespace api.Repository
             {
                 stocks = stocks.Where(x => x.Symbol.Contains(query.Symbol));
             }
-            
+
             if (!string.IsNullOrWhiteSpace(query.SortBy))
             {
                 if (query.SortBy.Equals("Symbol", StringComparison.OrdinalIgnoreCase))
                 {
                     stocks = query.IsDescending ? stocks.OrderByDescending(x => x.Symbol) : stocks.OrderBy(x => x.Symbol);
                 }
-                
+
                 if (query.SortBy.Equals("CompanyName", StringComparison.OrdinalIgnoreCase))
                 {
                     stocks = query.IsDescending ? stocks.OrderByDescending(x => x.CompanyName) : stocks.OrderBy(x => x.CompanyName);
                 }
             }
+            
+            var skipNumber = (query.PageNumber - 1) * query.PageSize;
+            stocks = stocks.Skip(skipNumber).Take(query.PageSize); 
 
             return await stocks.ToListAsync();
         }

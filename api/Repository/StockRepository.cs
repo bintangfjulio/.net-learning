@@ -54,7 +54,7 @@ namespace api.Repository
             {
                 return null;
             }
-            
+
             existingStock.Symbol = stockDto.Symbol;
             existingStock.CompanyName = stockDto.CompanyName;
             existingStock.Purchase = stockDto.Purchase;
@@ -62,8 +62,13 @@ namespace api.Repository
             existingStock.Industry = stockDto.Industry;
             existingStock.MarketCap = stockDto.MarketCap;
             await _context.SaveChangesAsync();
-            
+
             return existingStock;
+        }
+        
+        public Task<bool> StockExist(int id)
+        {
+            return _context.Stocks.AnyAsync(x => x.Id == id);
         }
     }
 }

@@ -21,3 +21,9 @@ dotnet ef migrations add init
 ```
 dotnet ef database update
 ```
+
+## 4. Add Identity Migration
+
+```
+dotnet ef migrations add Identity
+```

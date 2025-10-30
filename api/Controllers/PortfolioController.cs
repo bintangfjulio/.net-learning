@@ -59,7 +59,7 @@ namespace api.Controllers
             {
                 return BadRequest("Stock does not exist.");
             }
-            
+
             var userPortfolio = await _portofolioRepo.GetUserPortfolio(appUser);
             if (userPortfolio.Any(x => x.Symbol.ToLower() == symbol.ToLower()))
             {
@@ -80,6 +80,30 @@ namespace api.Controllers
             else
             {
                 return Created();
+            }
+        }
+
+        [HttpDelete]
+        [Authorize]
+        public async Task<IActionResult> DeletePortfolio(string symbol)
+        {
+            var username = User.GetUsername();
+            var appUser = await _userManager.FindByNameAsync(username);
+            if (appUser == null)
+            {
+                return Unauthorized("User not found");
+            }
+
+            var userPortfolio = await _portofolioRepo.GetUserPortfolio(appUser);
+            var filteredStock = userPortfolio.Where(x => x.Symbol.ToLower() == symbol.ToLower()).ToList();
+            if (filteredStock.Count == 1)
+            {
+                await _portofolioRepo.DeleteAsync(appUser, symbol);
+                return Ok();
+            }
+            else
+            {
+                return BadRequest("Stock does not exist in portfolio.");
             }
         }
     }

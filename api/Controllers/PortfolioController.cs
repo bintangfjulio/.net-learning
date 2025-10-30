@@ -18,12 +18,14 @@ namespace api.Controllers
         private readonly UserManager<AppUser> _userManager;
         private readonly IStockRepository _stockRepo;
         private readonly IPortofolioRepository _portofolioRepo;
+        private readonly IFMPService _fMPService;
 
-        public PortfolioController(UserManager<AppUser> userManager, IStockRepository stockRepo, IPortofolioRepository portofolioRepo)
+        public PortfolioController(UserManager<AppUser> userManager, IStockRepository stockRepo, IPortofolioRepository portofolioRepo, IFMPService fMPService)
         {
             _userManager = userManager;
             _stockRepo = stockRepo;
             _portofolioRepo = portofolioRepo;
+            _fMPService = fMPService;
         }
 
         [HttpGet]
@@ -42,6 +44,48 @@ namespace api.Controllers
             return Ok(userPortfolio);
         }
 
+        // [HttpPost]
+        // [Authorize]
+        // public async Task<IActionResult> AddPortfolio(string symbol)
+        // {
+        //     var username = User.GetUsername();
+
+        //     var appUser = await _userManager.FindByNameAsync(username);
+        //     if (appUser == null)
+        //     {
+        //         return Unauthorized("User not found");
+        //     }
+
+        //     var stock = await _stockRepo.GetBySymbolAsync(symbol);
+        //     if (stock == null)
+        //     {
+        //         return BadRequest("Stock does not exist.");
+        //     }
+
+        //     var userPortfolio = await _portofolioRepo.GetUserPortfolio(appUser);
+        //     if (userPortfolio.Any(x => x.Symbol.ToLower() == symbol.ToLower()))
+        //     {
+        //         return BadRequest("Stock already exists in portfolio.");
+        //     }
+
+        //     var portfolioModel = new Portfolio
+        //     {
+        //         AppUserId = appUser.Id,
+        //         StockId = stock.Id
+        //     };
+
+        //     var result = await _portofolioRepo.CreateAsync(portfolioModel);
+        //     if (result == null)
+        //     {
+        //         return StatusCode(500, "Could not create");
+        //     }
+        //     else
+        //     {
+        //         return Created();
+        //     }
+        // }
+
+        // seed version
         [HttpPost]
         [Authorize]
         public async Task<IActionResult> AddPortfolio(string symbol)
@@ -57,7 +101,15 @@ namespace api.Controllers
             var stock = await _stockRepo.GetBySymbolAsync(symbol);
             if (stock == null)
             {
-                return BadRequest("Stock does not exist.");
+                stock = await _fMPService.FindStockBySymbolAsync(symbol);
+                if (stock == null)
+                {
+                    return BadRequest("Stock does not exist.");
+                }
+                else
+                {
+                    await _stockRepo.CreateAsync(stock);
+                }
             }
 
             var userPortfolio = await _portofolioRepo.GetUserPortfolio(appUser);

@@ -172,4 +172,3 @@ C:\Data\Projects\SelfLearning\learn-net\api\bin\Debug\net9.0\Microsoft.Extension
 C:\Data\Projects\SelfLearning\learn-net\api\bin\Debug\net9.0\Newtonsoft.Json.dll
 C:\Data\Projects\SelfLearning\learn-net\api\bin\Debug\net9.0\Newtonsoft.Json.Bson.dll
 C:\Data\Projects\SelfLearning\learn-net\api\bin\Debug\net9.0\Swashbuckle.AspNetCore.SwaggerUI.dll
-C:\Data\Projects\SelfLearning\learn-net\api\obj\Debug\net9.0\staticwebassets.upToDateCheck.txt

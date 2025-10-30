@@ -17,5 +17,8 @@ namespace api.Models
         
         // Navigation (many to one)
         public Stock? Stock { get; set; }
+        public string AppUserId { get; set; } = string.Empty;
+        // Navigation (one to one)
+        public AppUser? AppUser { get; set; }
     }
 }

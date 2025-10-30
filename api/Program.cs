@@ -58,6 +58,7 @@ builder.Services.AddAuthorization();
 builder.Services.AddScoped<IStockRepository, StockRepository>();
 builder.Services.AddScoped<ICommentRepository, CommentRepository>();
 builder.Services.AddScoped<ITokenService, TokenService>();
+builder.Services.AddScoped<IPortofolioRepository, PortofolioRepository>();
 
 builder.Services.AddOpenApi("v1", options =>
 {
